@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>R.M.S. Titanic Passenger Manifest Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=IM+Fell+English+SC&family=Playfair+Display:ital,wght@0,400;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Playfair Display', serif; 
+            /* Light parchment texture background */
+            background-color: #f3efea;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png'); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            color: #2c3e50; /* Deep blue text */
+        }
+        
+        .container { 
+            background: #fffdf9; /* Slightly off-white inside */
+            padding: 2.5rem; 
+            border-radius: 5px; 
+            /* Ornate brass/gold border styling */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 8px solid #a67c52; /* Brass Color */
+            border-image: linear-gradient(to bottom right, #bf9b30, #a67c52, #bf9b30) 1;
+            width: 450px; 
+            position: relative;
+        }
+
+        /* Decorative "Manifest" Title */
+        h2 { 
+            text-align: center; 
+            font-family: 'Cinzel Decorative', cursive;
+            color: #1a252f; /* Darkest Navy */
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #a67c52;
+            padding-bottom: 10px;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 0.95rem; 
+            color: #1a252f;
+            font-weight: bold;
+            font-family: 'IM Fell English SC', serif;
+            letter-spacing: 1px;
+        }
+
+        /* Vintage styled selects and inputs */
+        select, input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #d3c4a9; /* Weathered tan border */
+            border-radius: 3px; 
+            box-sizing: border-box; 
+            background-color: #fdfaf5; 
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: #333;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #a67c52; /* Brass on focus */
+            box-shadow: 0 0 5px rgba(166, 124, 82, 0.5);
+        }
+
+        /* Themed Button - Weathered Brass */
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(#b18c63, #8c6d4f); /* Brass gradient */
+            border: 2px solid #70583f;
+            color: #fff; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 1.1rem; 
+            font-family: 'Cinzel Decorative', cursive;
+            text-transform: uppercase;
+            margin-top: 15px; 
+            box-shadow: 0 4px #70583f;
+            transition: all 0.2s ease;
+        }
+
+        button:hover { 
+            background: linear-gradient(#c6a179, #9c7c5b);
+        }
+
+        button:active {
+            box-shadow: 0 1px #70583f;
+            transform: translateY(3px);
+        }
+
+        /* Prediction Result Styling */
+        .result { 
+            text-align: center; 
+            margin-top: 25px; 
+            font-weight: bold; 
+            font-size: 1.4rem; 
+            padding: 15px;
+            border-top: 2px dashed #a67c52;
+            font-family: 'IM Fell English SC', serif;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Passenger Manifest</h2>
+    
+    <form action="/predict" method="post">
+        <div class="form-group">
+            <label>Passenger Class</label>
+            <select name="pclass" required>
+                <option value="1">First Class (Luxury)</option>
+                <option value="2">Second Class (Standard)</option>
+                <option value="3">Third Class (Steerage)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Sex</label>
+            <select name="sex" required>
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Age (in years)</label>
+            <input type="number" name="age" step="0.1" placeholder="e.g. 29" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Siblings / Spouses Aboard</label>
+            <input type="number" name="sibsp" value="0" min="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Parents / Children Aboard</label>
+            <input type="number" name="parch" value="0" min="0" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Port of Embarkation</label>
+            <select name="embarked" required>
+                <option value="0">Southampton (UK)</option>
+                <option value="1">Cherbourg (FR)</option>
+                <option value="2">Queenstown (IRE)</option>
+            </select>
+        </div>
+        
+        <button type="submit">Submit to Registry</button>
+    </form>
+
+    {% if prediction_text %}
+    <div class="result" style="color: {{ text_color }}">
+        Registry Status:<br>
+        {{ prediction_text }}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
